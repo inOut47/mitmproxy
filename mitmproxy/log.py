@@ -19,20 +19,23 @@ class Log:
     """
         The central logger, exposed to scripts as mitmproxy.ctx.log.
     """
-    def __init__(self, master):
+    def __init__(self, master,level=3):
         self.master = master
-
+        self.level = level
+        
     def debug(self, txt):
         """
             Log with level debug.
         """
-        self(txt, "debug")
+        if self.level <= 3:
+            self(txt, "debug")
 
     def info(self, txt):
         """
             Log with level info.
         """
-        self(txt, "info")
+        if self.level <= 2:
+            self(txt, "info")
 
     def alert(self, txt):
         """
@@ -41,19 +44,22 @@ class Log:
             drawn to the output even if they're not currently looking at the
             event log.
         """
-        self(txt, "alert")
+        if self.level <= 2:
+            self(txt, "alert")
 
     def warn(self, txt):
         """
             Log with level warn.
         """
-        self(txt, "warn")
+        if self.level <= 1:
+            self(txt, "warn")
 
     def error(self, txt):
         """
             Log with level error.
         """
-        self(txt, "error")
+        if self.level <= 0:
+            self(txt, "error")
 
     def __call__(self, text, level="info"):
         asyncio.get_event_loop().call_soon(
